@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include<conio.h>
+#include <conio.h>
 
 #define TRUE 1
 #define INVALID_STUDENT_CODE -1
+
 struct Student{
     int MSSV;
     char name[1000];
@@ -44,8 +45,12 @@ Student createHS(){
     if ((p=strchr(newHS.name, '\n')) != NULL){
         *p = '\0';
     }
+    do{
+    if(newHS.CPA < 0||newHS.CPA >4)
+    printf("CPA khong the nho hon 0 hoac lon hon 4. Nhap lai!\n");
     printf("Nhap CPA:");
     scanf("%f", &newHS.CPA);
+    }while(newHS.CPA < 0||newHS.CPA >4);
     return newHS;
 }
 
@@ -173,12 +178,12 @@ Student handleLineData(char *line){
 }
 void printlist(Node head){
     printf("Danh sach hien tai:\n");
-    printf("-----------------------------------\n");
-    printf("%10s%15s%10s\n","Ma sinh vien","Ho va ten","CPA");
+    printf("-----------------------------------------\n");
+    printf("%10s%15s%12s\n","Ma sinh vien","Ho va ten","CPA");
     for(Node p = head; p != NULL; p = p->next){
-        printf("%10d%15s%10.2f\n",p->student.MSSV,p->student.name,p->student.CPA);
+        printf("%10d%18s%12.2f\n",p->student.MSSV,p->student.name,p->student.CPA);
     }
-    printf("------------------------------------\n");
+    printf("-----------------------------------------\n");
 }
 
 int findIndexByCode(Node head, int code){
@@ -371,6 +376,19 @@ Node readData(Node head, const char* fileName){
     return head;
 }
 
+Node writeData(Node head, const char* fileName){
+    FILE* file = fopen(fileName, "w");
+    if(file == NULL){
+        printf("Co loi khi mo file : %s\n", fileName);
+        exit(EXIT_FAILURE);
+    }
+    for(Node p = head; p != NULL; p=p->next){
+        fprintf(file, "%d\t%s\t%.2f\n", p->student.MSSV, p->student.name, p->student.CPA);
+    }
+    fclose(file);
+    return head;
+}
+
 void printMenu(){
     printf("------------------------------------------------\n");
     printf("|               Truong DHBK Ha Noi              |\n");
@@ -387,17 +405,19 @@ void printMenu(){
     printf("6. Sinh vien co diem CPA cao nhat\n");
     printf("7. Tra cuu MSSV\n");
     printf("8. Sap xep danh sach theo CPA\n");
-    printf("9. Thoat chuong trinh\n");
+    printf("9. Luu thay doi\n");
+    printf("10. Thoat chuong trinh\n");
     printf("================================================\n");
 }
 int main(){
     Node head = InitHead();
     head = readData(head, "E://Bai Tap//CTDL&GT//Linked list//DS_Sinhvien.txt");
     int option;
+    char choose;
     Student result;
     while(TRUE){
         printMenu();
-        printf("Nhap lua chon cua ban (1-9): ");
+        printf("Nhap lua chon cua ban (1-10): ");
         scanf("%d", &option);
         switch(option) {
             case 1:
@@ -428,6 +448,10 @@ int main(){
                 printlist(head);
                 break;
             case 9:
+                head = writeData(head, "E://Bai Tap//CTDL&GT//Linked list//DS_Sinhvien.txt");
+                printf("Luu thay doi thanh cong!\n");
+                break;
+            case 10:
                 printf("Ket thuc chuong trinh!...\n");
                 exit(EXIT_SUCCESS);
             default:
