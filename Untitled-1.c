@@ -2,24 +2,25 @@
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
-
+//defince constant variable
 #define TRUE 1
 #define INVALID_STUDENT_CODE -1
-
+//define Student 
 struct Student{
     int MSSV;
     char name[1000];
     float CPA;
 };
-
+//Give the struct a nice call
 typedef struct Student Student;
-
+//define Node
 struct Node{
     Student student;
     struct node *next;
 };
- 
+//Give the node a nice call
 typedef struct Node *Node;
+//create a node and bring the data in
 Node createNode(Student x){
     Node temp;
     temp = (Node)malloc(sizeof(struct Node));
@@ -27,13 +28,13 @@ Node createNode(Student x){
     temp->student=x;
     return temp;
 }
-
+//creat a head node for the list
 Node InitHead(){
     Node head;
     head = NULL;
     return head;
 }
-
+//create data for the list
 Student createHS(){
     Student newHS;
     printf("Nhap MSSV:");
@@ -53,7 +54,7 @@ Student createHS(){
     }while(newHS.CPA < 0||newHS.CPA >4);
     return newHS;
 }
-
+//Add node at the end of the list
 Node AddTail(Node head, Student value){
     Node temp,p;
     temp = createNode(value);
@@ -69,7 +70,7 @@ Node AddTail(Node head, Student value){
     }
     return head;
 }
-
+//Add node at the beginnning of the list
 Node AddHead(Node head, Student value){
     Node temp = createNode(value);
     if(head==NULL){
@@ -81,7 +82,7 @@ Node AddHead(Node head, Student value){
     }
     return head;
 }
-
+//Add node at any positions in the list
 Node AddAt(Node head, Student value,int position){
     position=position-1;
     if(position==0||head==NULL){
@@ -106,7 +107,7 @@ Node AddAt(Node head, Student value,int position){
     }
     return head;
 }
-
+//delete head node of the list
 Node delHead(Node head){
     if(head==NULL){
         printf("Khong co gi de xoa!");
@@ -116,6 +117,7 @@ Node delHead(Node head){
     }
     return head;
 }
+//delete the last node
 Node delTail(Node head){
     if(head==NULL||head->next==NULL){
         return delHead(head);
@@ -129,6 +131,7 @@ Node delTail(Node head){
         return head;
     }
 }
+//delete at any positions in the list
 Node delAt(Node head, int position){
     if(position == 0 || head == NULL || head->next == NULL){
         head = delHead(head); 
@@ -149,6 +152,7 @@ Node delAt(Node head, int position){
     }
     return head;
 }
+//text separator for data in file text
 Student handleLineData(char *line){
     Student student;
     student.MSSV = INVALID_STUDENT_CODE;
@@ -176,6 +180,7 @@ Student handleLineData(char *line){
     }
     return student;
 }
+//print the linked list to the cmd
 void printlist(Node head){
     printf("Danh sach hien tai:\n");
     printf("-----------------------------------------\n");
@@ -185,7 +190,7 @@ void printlist(Node head){
     }
     printf("-----------------------------------------\n");
 }
-
+//give the student's position by searching code
 int findIndexByCode(Node head, int code){
     int index = -1;
     for(Node p = head; p != NULL; p = p->next){
@@ -196,7 +201,7 @@ int findIndexByCode(Node head, int code){
     }
     return -1;
 }
- 
+//give the student's information by searching code
 Student IndexByCode(Node head){
     int code;
     Student newHS;
@@ -226,7 +231,7 @@ Student IndexByCode(Node head){
         }
     }
 }
-
+//add data in the list
 Node addNode(Node head){
     Student newHS;
     char option;
@@ -245,6 +250,7 @@ Node addNode(Node head){
     }
     return head;
 }
+//edit any data in the list
 void editNode(Node head){
     int code;
     char option;
@@ -273,6 +279,7 @@ void editNode(Node head){
         break;
     }
 }
+//delete data in the list
 Node removeNode(Node head){
     int code;
     char option;
@@ -296,7 +303,7 @@ Node removeNode(Node head){
     }
     return head;   
 }
-
+//caculate the average CPA
 float Average(Node head){
     float sum = 0;
     int a = 0;
@@ -306,7 +313,7 @@ float Average(Node head){
     }
     return sum/a;
 }
-
+//find the max CPA and give the student's information
 Student maxbyCPA(Node head){
     Student student = head->student;
     for(Node p = head; p!=NULL;p=p->next){
@@ -315,7 +322,7 @@ Student maxbyCPA(Node head){
         }
     return student;
 }
-
+//find the last node
 Node LastNode(Node head){
     Node temp = head;
     while(temp != NULL && temp->next !=NULL){
@@ -323,7 +330,7 @@ Node LastNode(Node head){
     }
     return temp;
 }
-
+//find the partion for the quicksort
 Node partion(Node first, Node last){
     Node pivot = first;
     Node front = first;
@@ -343,7 +350,7 @@ Node partion(Node first, Node last){
     last->student=temp;
     return pivot;
 }
-
+//sorting the list by CPA in ascending order using quickSort
 void quickSort(Node first, Node last){
     if(first == last){
         return;
@@ -357,8 +364,7 @@ void quickSort(Node first, Node last){
         quickSort(first, pivot);
     }
 }
-
-
+//read the data in file
 Node readData(Node head, const char* fileName){
     FILE* file = fopen(fileName, "r");
     if(!file){
@@ -375,7 +381,7 @@ Node readData(Node head, const char* fileName){
     fclose(file);
     return head;
 }
-
+//write the changed data into the file
 Node writeData(Node head, const char* fileName){
     FILE* file = fopen(fileName, "w");
     if(file == NULL){
@@ -388,7 +394,7 @@ Node writeData(Node head, const char* fileName){
     fclose(file);
     return head;
 }
-
+//show the operated menu in the cmd
 void printMenu(){
     printf("------------------------------------------------\n");
     printf("|               Truong DHBK Ha Noi              |\n");
@@ -410,7 +416,9 @@ void printMenu(){
     printf("================================================\n");
 }
 int main(){
+    //make a new head node for the list
     Node head = InitHead();
+    //import the data from the file into the list
     head = readData(head, "E://Bai Tap//CTDL&GT//Linked list//DS_Sinhvien.txt");
     int option;
     char choose;
