@@ -14,4 +14,4 @@ Also, if you have any suggestions for the file, please write it down in this fil
 
 
 # Final:
-Thank you for reviewing this file. Also, please notice to commit this README file properly, or else I can't read it clearly.
+Thank you for reviewing this file. Also, please notice that committing this README file properly, or else I can't read it clearly.
