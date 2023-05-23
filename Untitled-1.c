@@ -20,6 +20,7 @@ struct Node{
 };
  
 typedef struct Node *Node;
+
 Node createNode(Student x){
     Node temp;
     temp = (Node)malloc(sizeof(struct Node));
@@ -34,15 +35,15 @@ Node InitHead(){
     return head;
 }
 
-Student createHS(){
+Student createHS(Node head){
     Student newHS;
+    do{
     printf("Nhap MSSV:");
-  do{
     scanf("%d", &newHS.MSSV);
-    if(findIndexByCode(head, newHS.MSSV) > 0){
-printf("MSSV da bi trung, vui long nhap lai");
-}
-}while(findIndexByCode(head, newHS.MSSV) > 0)
+    if( findIndexByCode(head, newHS.MSSV) >= 0){
+    printf("MSSV da bi trung, vui long nhap lai!\n");
+    }  
+    }while(findIndexByCode(head, newHS.MSSV) >= 0);
     printf("Nhap Ten:");
     char *p;
     getchar();
@@ -101,7 +102,7 @@ Node AddAt(Node head, Student value,int position){
         }
     if(k !=position){
         head = AddTail(head, value);
-        printf("Vi tri chen vuot qua vi tri cuoi cung");
+        printf("Vi tri chen vuot qua vi tri cuoi cung!\n");
     }
     else{
         Node temp = createNode(value);
@@ -121,6 +122,7 @@ Node delHead(Node head){
     }
     return head;
 }
+
 Node delTail(Node head){
     if(head==NULL||head->next==NULL){
         return delHead(head);
@@ -134,6 +136,7 @@ Node delTail(Node head){
         return head;
     }
 }
+
 Node delAt(Node head, int position){
     if(position == 0 || head == NULL || head->next == NULL){
         head = delHead(head); 
@@ -154,6 +157,7 @@ Node delAt(Node head, int position){
     }
     return head;
 }
+
 Student handleLineData(char *line){
     Student student;
     student.MSSV = INVALID_STUDENT_CODE;
@@ -201,7 +205,7 @@ int findIndexByCode(Node head, int code){
     }
     return -1;
 }
- 
+
 Student IndexByCode(Node head){
     int code;
     Student newHS;
@@ -240,7 +244,7 @@ Node addNode(Node head){
         printf("===========Nhap du lieu can them============\n");
         printf("Nhap vi tri muon them:");
         scanf("%d", &position);
-        newHS=createHS();
+        newHS=createHS(head);
         head = AddAt(head, newHS, position);
         printf("Them thanh cong! Them tiep? (Y/n)");
         getchar();
@@ -250,25 +254,27 @@ Node addNode(Node head){
     }
     return head;
 }
+
 void editNode(Node head){
     int code;
     char option;
     Student newHS;
     while(TRUE){
         printf("=================Chon Sinh vien can sua================\n");
-        printf("Nhap MSSV can sua:");
+        printf("Nhap MSSV can sua: ");
         scanf("%d", &code);
         int found  = 0;
         for(Node p = head; p != NULL; p=p->next){
             if(p->student.MSSV==code){
                 found  = 1;
-newHS.MSSV = code;
                 printf("LUU Y! Sua lai toan bo thong tin sinh vien!!\n");
-                printf("Nhap ho va ten moi");
+                newHS.MSSV = code;
+                printf("Nhap ho va ten moi: ");
+                char *q;
                 getchar();
     fgets(newHS.name,1000,stdin);
-    if ((p=strchr(newHS.name, '\n')) != NULL){
-        *p = '\0';
+    if ((q=strchr(newHS.name, '\n')) != NULL){
+        *q = '\0';
     }
     do{
     if(newHS.CPA < 0||newHS.CPA >4)
@@ -291,6 +297,7 @@ newHS.MSSV = code;
         break;
     }
 }
+
 Node removeNode(Node head){
     int code;
     char option;
@@ -362,6 +369,26 @@ Node partion(Node first, Node last){
     return pivot;
 }
 
+Node partion2(Node first, Node last){
+    Node pivot = first;
+    Node front = first;
+    Student temp;
+    while(front != NULL && front != last){
+        if(strcmp(front->student.name, last->student.name) < 0){
+            pivot = first;
+            temp = first->student;
+            first->student = front->student;
+            front->student = temp;
+            first = first->next;
+        }
+        front = front->next;
+    }
+    temp = first->student;
+    first->student = last->student;
+    last->student=temp;
+    return pivot;
+}
+
 void quickSort(Node first, Node last){
     if(first == last){
         return;
@@ -376,6 +403,19 @@ void quickSort(Node first, Node last){
     }
 }
 
+void quickSort2(Node first, Node last){
+    if(first == last){
+        return;
+    }
+    Node pivot = partion2(first, last);
+    if (pivot != NULL && pivot->next != NULL) {
+        quickSort2(pivot->next, last);
+    }
+  
+    if (pivot != NULL && first != pivot) {
+        quickSort2(first, pivot);
+    }
+}
 
 Node readData(Node head, const char* fileName){
     FILE* file = fopen(fileName, "r");
@@ -423,18 +463,20 @@ void printMenu(){
     printf("6. Sinh vien co diem CPA cao nhat\n");
     printf("7. Tra cuu MSSV\n");
     printf("8. Sap xep danh sach theo CPA\n");
-    printf("9. Luu thay doi\n");
-    printf("10. Thoat chuong trinh\n");
+    printf("9. Sap xep danh sach theo Ho va Ten\n");
+    printf("10. Luu thay doi\n");
+    printf("11. Thoat chuong trinh\n");
     printf("================================================\n");
 }
+
 int main(){
     Node head = InitHead();
-    head = readData(head, "E://Bai Tap//CTDL&GT//Linked list//DS_Sinhvien.txt");
+    head = readData(head, "C://Users//84962//Downloads//Student-Data-Project-main//DS_Sinhvien.txt" );
     int option;
     Student result;
     while(TRUE){
         printMenu();
-        printf("Nhap lua chon cua ban (1-10): ");
+        printf("Nhap lua chon cua ban (1-11): ");
         scanf("%d", &option);
         switch(option) {
             case 1:
@@ -474,10 +516,15 @@ int main(){
                 break;
             case 9:
                 system("cls");
-                head = writeData(head, "E://Bai Tap//CTDL&GT//Linked list//DS_Sinhvien.txt");
-                printf("Luu thay doi thanh cong!\n");
+                quickSort2(head, LastNode(head));
+                printlist(head);
                 break;
             case 10:
+                system("cls");
+                head = writeData(head, "C://Users//84962//Downloads//Student-Data-Project-main//DS_Sinhvien.txt");
+                printf("Luu thay doi thanh cong!\n");
+                break;
+            case 11:
                 system("cls");
                 printf("Ket thuc chuong trinh!... Bam bat ky nut nao de thoat!\n");
                 getch();
