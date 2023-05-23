@@ -37,7 +37,12 @@ Node InitHead(){
 Student createHS(){
     Student newHS;
     printf("Nhap MSSV:");
+  do{
     scanf("%d", &newHS.MSSV);
+    if(findIndexByCode(head, newHS.MSSV) > 0){
+printf("MSSV da bi trung, vui long nhap lai");
+}
+}while(findIndexByCode(head, newHS.MSSV) > 0)
     printf("Nhap Ten:");
     char *p;
     getchar();
@@ -258,7 +263,7 @@ void editNode(Node head){
             if(p->student.MSSV==code){
                 found  = 1;
                 printf("LUU Y! Sua lai toan bo thong tin sinh vien!!\n");
-                newHS = createHS();
+               newHS = createHS();
                 p->student = newHS;
                 break;
             }
