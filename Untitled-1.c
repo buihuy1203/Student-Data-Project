@@ -262,8 +262,20 @@ void editNode(Node head){
         for(Node p = head; p != NULL; p=p->next){
             if(p->student.MSSV==code){
                 found  = 1;
+newHS.MSSV = code;
                 printf("LUU Y! Sua lai toan bo thong tin sinh vien!!\n");
-               newHS = createHS();
+                printf("Nhap ho va ten moi");
+                getchar();
+    fgets(newHS.name,1000,stdin);
+    if ((p=strchr(newHS.name, '\n')) != NULL){
+        *p = '\0';
+    }
+    do{
+    if(newHS.CPA < 0||newHS.CPA >4)
+    printf("CPA khong the nho hon 0 hoac lon hon 4. Nhap lai!\n");
+    printf("Nhap CPA moi:");
+    scanf("%f", &newHS.CPA);
+    }while(newHS.CPA < 0||newHS.CPA >4);
                 p->student = newHS;
                 break;
             }
