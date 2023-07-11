@@ -45,6 +45,47 @@ int findIndexByCode(Node head, int code){
     }
     return -1;
 }
+int checkID(char *s){
+    if (s == "" ||s == " "){
+        return 0;
+    }
+    for (int i = 0; i < strlen(s); i++)
+    {
+        if (isdigit(s[i]) == 0)
+              return 0;
+    }
+    return 1;
+}
+int checkName(char *s){
+    if(s == ""||s == " "){
+        return 0;
+    }
+    for (int i = 0; i < strlen(s); i++)
+    {
+        if (isdigit(s[i]) != 0)
+              return 0;
+    }
+    return 1;
+}
+
+int checkMark(char *s){
+    if(s == ""||s == " "){
+        return 0;
+    }
+    for (int i = 0; s[i] != '\n'; i++)
+    {
+        if(s[i] == '.'){
+                continue;
+        }
+        if (isdigit(s[i]) == 0 ){
+              return 0;
+        }
+    }
+    float c = (float)atoi(s);
+    if(c < 0 || c > 4)
+    return 0;
+    return 1;
+}
 //Ham tao du lieu cho sinh vien
 Student createHS(Node head){
     Student newHS;
@@ -158,7 +199,7 @@ Node delTail(Node head){
 }
 //Ham xoa Node bat ky
 Node delAt(Node head, int position){
-    //Neu vi tri xoa ở dau danh sach
+    //Neu vi tri xoa o dau danh sach
     if(position == 0 || head == NULL || head->next == NULL){
         head = delHead(head); 
     }else{
@@ -170,7 +211,7 @@ Node delAt(Node head, int position){
             p=p->next;
             k++;
         }
-        //Vi tri xoa ở giua danh sach
+        //Vi tri xoa o giua danh sach
         if(k != position){
             head = delTail(head);
         }else{
@@ -195,8 +236,14 @@ Student handleLineData(char *line){
         printf("Du lieu khong dinh dang: %s", line);
         exit(EXIT_FAILURE);
     }
+    if(!checkID(tmp)){
+        printf("Du lieu khong dinh dang: %s", tmp);
+        exit(EXIT_FAILURE);
+    }else{
+        student.MSSV = atoi(tmp);
+    }
     //Nhap MSSV tu file vao chuong trinh
-   student.MSSV = atoi(tmp);
+   
     int index = 0;
     for (;;index++) {
         tmp = strtok(NULL, delimiter);
@@ -204,9 +251,18 @@ Student handleLineData(char *line){
             break;
         if (index == 0){
             //Nhap ho va ten tu file vao chuong trinh
-            strcpy(student.name, tmp);
+            if(!checkName(tmp)){
+        printf("Du lieu khong dinh dang: %s", tmp);
+        exit(EXIT_FAILURE);
+    }else{
+        strcpy(student.name, tmp);
+    }
         }else if (index == 1){
             //Nhap CPA tu file vao chuong trinh
+            if(!checkMark(tmp)){
+        printf("Du lieu khong dinh dang: %s", tmp);
+        exit(EXIT_FAILURE);
+    }else
            student.CPA = (float)atof(tmp);
         }else {
             printf("Du lieu khong dinh dang: %s", line);
